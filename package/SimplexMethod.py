@@ -23,23 +23,29 @@ def simplex(matrix, rightSide):
     maxIndex = 0
 
     for i in range(len(matrix[0])):  # условие оптимальности
-        if max > matrix[0][i] > 0:
+        if max < matrix[0][i] > 0:
             max = matrix[0][i]
             maxIndex = i
 
-    if max == 0:  # условие выхода
-        return False
+    #if max == 0:  # условие выхода
+     #   return False
+    print(max,maxIndex)
 
 # -----------------------------------------------------------
     minimum = rightSide[1]
 
     minIndex = 0
 
-    for i in range(1,len(rightSide)):
+    for i in range(1, len(rightSide)):
+        if matrix[i][maxIndex] == 0:
+            continue
         result = rightSide[i]/matrix[i][maxIndex]
-        if minimum<result:
+        if minimum>result:
             minimum = result
             minIndex = i
 
+    print(minimum,minIndex)
     Gauss_Jordan.gauss_jordan(maxIndex, minIndex,matrix,rightSide)
+    output(matrix)
 
+    print(rightSide)
