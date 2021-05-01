@@ -1,51 +1,57 @@
 import Gauss_Jordan
 
-def output(list):
-    for i in list:
-        for j in i:
-            print(j, end="   ")
-        print()
-    print()
-
 
 def simplex(matrix, rightSide):
-    basis = [[0 for j in range(len(rightSide) - 1)] for i in range(len(rightSide) - 1)]
+    maxResult = 0  # находим начальное решение
 
-    numberOfValue = [i for i in range(len(matrix[0]) - len(rightSide) + 2, len(matrix[0]) + 1)]
+    basis = [i for i in range(len(matrix) - 2, len(matrix[0]))]
 
-    for i in range(len(rightSide) - 1):
-        basis[i][i] = 1
+    # ------------------------------------------------------------
 
-    print(numberOfValue)
-# ------------------------------------------------------------
-    max = 0
+    while True:  # gause - jordan start
 
-    maxIndex = 0
+        max = 0
 
-    for i in range(len(matrix[0])):  # условие оптимальности
-        if max < matrix[0][i] > 0:
-            max = matrix[0][i]
-            maxIndex = i
+        maxIndex = 0
 
-    #if max == 0:  # условие выхода
-     #   return False
-    print(max,maxIndex)
+        for i in range(len(matrix[0])):  # условие оптимальности
+            if max < matrix[0][i] > 0:
+                max = matrix[0][i]
+                maxIndex = i
 
-# -----------------------------------------------------------
-    minimum = rightSide[1]
+        if max == 0:  # условие выхода
+            make_solution(matrix, maxResult, basis,rightSide)
+            return
 
-    minIndex = 0
+        # -----------------------------------------------------------
+        minimum = rightSide[1]  # выбор исключаемого элемента
 
-    for i in range(1, len(rightSide)):
-        if matrix[i][maxIndex] == 0:
-            continue
-        result = rightSide[i]/matrix[i][maxIndex]
-        if minimum>result:
-            minimum = result
-            minIndex = i
+        minIndex = 0
 
-    print(minimum,minIndex)
-    Gauss_Jordan.gauss_jordan(maxIndex, minIndex,matrix,rightSide)
-    output(matrix)
+        for i in range(1, len(rightSide)):
+            if matrix[i][maxIndex] == 0:
+                continue
+            result = rightSide[i] / matrix[i][maxIndex]
+            if minimum > result:
+                minimum = result
+                minIndex = i
 
-    print(rightSide)
+        basis.remove(basis[minIndex - 1])
+        basis.append(maxIndex)
+
+        Gauss_Jordan.gauss_jordan(maxIndex, minIndex, matrix, rightSide)
+        if maxResult < -rightSide[0]:
+            maxResult = -rightSide[0]
+
+
+def make_solution(matrix, maxResult, basis, rightSide):
+    print("Maximum of function is: " + str(round(maxResult)))
+
+    basis.sort()
+
+    for i in range(1, len(matrix)):
+        for j in basis:
+            if matrix[i][j] == 1:
+                print("x with index: " + str(j+1) + " = " + str(round(rightSide[i])))
+                break
+

@@ -1,5 +1,3 @@
-import SimplexMethod
-
 
 def gauss_jordan(maxColomn, minString, matrix, rightSide):
     coef = matrix[minString][maxColomn]
